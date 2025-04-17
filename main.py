@@ -49,9 +49,9 @@ def main():
         for enemy in enemies:
             for weapon in weapons:
                 if enemy.collision(weapon):
-                    enemy.kill()
+                    enemy.split()
                     weapon.kill()
-                    
+
         for obj in drawable:
             
             obj.coordinate_reset(obj.position[0], obj.position[1])
