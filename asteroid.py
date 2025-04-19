@@ -38,4 +38,4 @@ class Asteroid(CircleShape):
             points = ASTEROID_POINTS_SMALL
         
         other.points += points
-        other.text = f"{points}"
+        other.text = f"{other.points}"
