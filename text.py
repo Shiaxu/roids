@@ -21,7 +21,7 @@ class Text(pygame.sprite.Sprite):
         self.rendered_str = font.render(self.text, True, "white")
 
     def render_text(self):
-        print(self.text)
+        
         self.rendered_str = font.render(self.text, True, "white")
 
         
