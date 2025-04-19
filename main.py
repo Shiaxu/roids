@@ -31,13 +31,14 @@ def main():
     AsteroidField.containers = (updatable)
     Bullets.containers = (weapons, updatable, drawable)
     Score.containers = (renderable)
-    Text.containers = (renderable)
+    #Text.containers = (renderable)
                         
     score_label = Text("Score:")
     score_value = Score(0)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
     
+    score_label.render_text()
 
     run = True
     while run:
@@ -53,27 +54,31 @@ def main():
                     sys.exit("Game Over!")
         except Exception as e:
             print(e)
+
+ 
+        score_compare = score_value.points
+
         for enemy in enemies:
             for weapon in weapons:
                 if enemy.collision(weapon):
                     enemy.split()
                     enemy.point_calculation(score_value)
-                    score_value.render_text()
-                    #pass score points to text render
                     weapon.kill()
+                    
 
         for obj in drawable:
             
             obj.coordinate_reset(obj.position[0], obj.position[1])
             obj.draw(screen)
-            #print(f"PRINTED {obj.position}")
+            
         
         
         for obj in renderable:
-            if obj.rendered == False:
+            
+            if obj.points != score_compare:
                 obj.render_text()
-
-
+                
+                
         screen.blit(score_value.rendered_str, (80,10))
         screen.blit(score_label.rendered_str, (10,10))
         pygame.display.flip()

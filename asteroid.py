@@ -32,8 +32,10 @@ class Asteroid(CircleShape):
         points = 0
         if self.radius == ASTEROID_MAX_RADIUS:
             points = ASTEROID_POINTS_LARGE  
-        if ASTEROID_MIN_RADIUS > self.radius < ASTEROID_MAX_RADIUS:
+        if ASTEROID_MIN_RADIUS < self.radius < ASTEROID_MAX_RADIUS:
             points = ASTEROID_POINTS_MEDIUM      
         if self.radius == ASTEROID_MIN_RADIUS:
             points = ASTEROID_POINTS_SMALL
+        
         other.points += points
+        other.text = f"{points}"
