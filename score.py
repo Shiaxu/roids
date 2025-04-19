@@ -1,6 +1,7 @@
 from text import *
 from constants import *
 
+
 class Score(Text):
     def __init__(self, points):
         
