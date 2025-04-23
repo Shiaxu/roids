@@ -8,6 +8,7 @@ class Player(CircleShape):
         
         self.rotation = 0
         self.timer = 0
+        self.lives = 3
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -52,3 +53,6 @@ class Player(CircleShape):
 
         shot = Bullets(a.x, a.y)
         shot.velocity = pygame.Vector2(0,1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+
+    def lives_upd(self, number):
+        self.lives += number

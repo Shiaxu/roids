@@ -6,7 +6,8 @@ from asteroidfield import *
 import sys
 from bullets import *
 from score import *
-
+from game_over import *
+from game_state import *
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -27,7 +28,7 @@ def main():
     renderable = pygame.sprite.Group()
 
     Asteroid.containers = (enemies, updatable, drawable)
-    Player.containers = (updatable, drawable)   
+    Player.containers = (drawable)   
     AsteroidField.containers = (updatable)
     Bullets.containers = (weapons, updatable, drawable)
     Score.containers = (renderable)
@@ -37,26 +38,53 @@ def main():
     score_value = Score(0)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
+    game_over = GameOver(screen, SCREEN_WIDTH, SCREEN_HEIGHT)
     
     score_label.render_text()
 
+    # Game State
+    state = GameState.PLAYING
+    # Game Loop
     run = True
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                
-        pygame.Surface.fill(screen, ("#000000"))
-        updatable.update(dt)
-        try:
-            for obj in enemies:
-                if obj.collision(player):
-                    sys.exit("Game Over!")
-        except Exception as e:
-            print(e)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p and state == GameState.PLAYING:
+                   state = GameState.PAUSED
+                if event.key == pygame.K_p and state == GameState.PAUSED:
+                   state = GameState.PLAYING
 
- 
+        pygame.Surface.fill(screen, ("#000000"))
+        
+        if state == GameState.GAME_OVER:
+            updatable.update(dt)
+
+        if state == GameState.PLAYING:
+            player.update(dt)
+            updatable.update(dt)
+            screen.blit(score_value.rendered_str, (80,10))
+            screen.blit(score_label.rendered_str, (10,10))
+            try:
+                for enemy in enemies:
+                    if enemy.collision(player):
+                        enemy.kill()
+                        
+                        
+                        if player.lives > 0:
+                            player.lives_upd(-1)
+                    
+                        else:
+                            player.kill()
+                            state = GameState.GAME_OVER
+
+
+            except Exception as e:
+                print(e)
+
         score_compare = score_value.points
+
 
         for enemy in enemies:
             for weapon in weapons:
@@ -67,22 +95,25 @@ def main():
                     
 
         for obj in drawable:
-            
             obj.coordinate_reset(obj.position[0], obj.position[1])
             obj.draw(screen)
             
-        
-        
         for obj in renderable:
             
             if obj.points != score_compare:
                 obj.render_text()
                 
-                
-        screen.blit(score_value.rendered_str, (80,10))
-        screen.blit(score_label.rendered_str, (10,10))
+
+        if state == GameState.GAME_OVER:
+            game_over.game_over_screen()
+            screen.blit(score_value.rendered_str, (((SCREEN_WIDTH - 200)/ 2, (SCREEN_HEIGHT - 200) / 2)))
+            screen.blit(score_label.rendered_str, (((SCREEN_WIDTH - 200)/ 2, (SCREEN_HEIGHT - 200) / 2)))
+
+        #screen.blit(score_value.rendered_str, (80,10))
+        #screen.blit(score_label.rendered_str, (10,10))
         pygame.display.flip()
         
+
         dt = clock.tick(60) / 1000
 
     print("Starting Asteroids!")
