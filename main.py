@@ -52,20 +52,22 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.KEYDOWN:
-                print(f"PRINTED {event.key == pygame.K_p}")
-                if event.key == pygame.K_p and state == GameState.PLAYING:
-                   state = GameState.PAUSED
-                elif event.key == pygame.K_p and state == GameState.PAUSED:
-                   state = GameState.PLAYING
-            
-                elif event.key == pygame.K_SPACE and state == GameState.GAME_OVER:
-                    state = GameState.PLAYING
-                    score_value.kill()
-                    updatable.empty()
-                    drawable.empty()
-                    enemies.empty()
-                    weapons.empty()
-                    renderable.empty()
+                match event.key:
+                    case pygame.K_p|pygame.K_ESCAPE:
+                        if state == GameState.PLAYING:
+                            state = GameState.PAUSED
+                        elif state == GameState.PAUSED:
+                            state = GameState.PLAYING
+                        
+                    case pygame.K_SPACE:
+                        if state == GameState.GAME_OVER:
+                            state = GameState.PLAYING
+                            score_value.kill()
+                            updatable.empty()
+                            drawable.empty()
+                            enemies.empty()
+                            weapons.empty()
+                            renderable.empty()
         
         pygame.Surface.fill(screen, ("#000000"))
         
