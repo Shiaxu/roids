@@ -51,16 +51,26 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.KEYDOWN:
+                print(f"PRINTED {event.key == pygame.K_p}")
                 if event.key == pygame.K_p and state == GameState.PLAYING:
                    state = GameState.PAUSED
-                if event.key == pygame.K_p and state == GameState.PAUSED:
+                elif event.key == pygame.K_p and state == GameState.PAUSED:
                    state = GameState.PLAYING
-
+            
+                elif event.key == pygame.K_SPACE and state == GameState.GAME_OVER:
+                    state = GameState.PLAYING
+                    score_value.kill()
+                    updatable.empty()
+                    drawable.empty()
+                    enemies.empty()
+                    weapons.empty()
+                    renderable.empty()
+        
         pygame.Surface.fill(screen, ("#000000"))
         
         if state == GameState.GAME_OVER:
             updatable.update(dt)
-
+            
         if state == GameState.PLAYING:
             player.update(dt)
             updatable.update(dt)
@@ -83,10 +93,8 @@ def main():
 
             except Exception as e:
                 print(e)
-
+        #### 
         score_compare = score_value.points
-
-
         for enemy in enemies:
             for weapon in weapons:
                 if enemy.collision(weapon):
@@ -104,7 +112,11 @@ def main():
             if obj.points != score_compare:
                 obj.render_text()
                 
-
+        if state == GameState.PAUSED:
+            UI_.pause_screen()
+            screen.blit(score_value.rendered_txt, (((SCREEN_WIDTH - score_value.width) / 2, (SCREEN_HEIGHT / 4) + score_value.height / 2)))
+            screen.blit(score_label.rendered_txt, (((SCREEN_WIDTH - score_label.width) / 2, (SCREEN_HEIGHT / 4) - score_label.height)))
+        
         if state == GameState.GAME_OVER:
             UI_.game_over_screen()
             screen.blit(score_value.rendered_txt, (((SCREEN_WIDTH - score_value.width) / 2, (SCREEN_HEIGHT / 4) + score_value.height / 2)))

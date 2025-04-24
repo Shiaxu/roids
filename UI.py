@@ -27,6 +27,12 @@ class UI:
         pygame.draw.rect(self.screen, "red", r, 3)
 
     def pause_screen(self):
-        pass
+        pause_text = Text("PAUSED", 69)
+        continue_text = Text("Press P to continue", 30)
+        pause_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        pause_surface.fill((0, 0, 0, 155))
+        self.screen.blit(pause_surface, (0,0))
+        
 
-
+        self.screen.blit(pause_text.rendered_txt, ((self.width - pause_text.width)/ 2, (self.height - pause_text.height) / 2))
+        self.screen.blit(continue_text.rendered_txt, ((self.width - continue_text.width)/ 2, (self.height / 2) +continue_text.height))
