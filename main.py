@@ -6,7 +6,7 @@ from asteroidfield import *
 import sys
 from bullets import *
 from score import *
-from game_over import *
+from UI import *
 from game_state import *
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -38,7 +38,7 @@ def main():
     score_value = Score(0)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
-    game_over = GameOver(screen, SCREEN_WIDTH, SCREEN_HEIGHT)
+    UI_ = UI(screen, SCREEN_WIDTH, SCREEN_HEIGHT)
     
     score_label.render_text()
 
@@ -64,18 +64,19 @@ def main():
         if state == GameState.PLAYING:
             player.update(dt)
             updatable.update(dt)
-            screen.blit(score_value.rendered_str, (80,10))
-            screen.blit(score_label.rendered_str, (10,10))
+            screen.blit(score_value.rendered_txt, (80,10))
+            screen.blit(score_label.rendered_txt, (10,10))
             try:
                 for enemy in enemies:
                     if enemy.collision(player):
                         enemy.kill()
                         
                         
-                        if player.lives > 0:
+                        if player.lives > 1:
                             player.lives_upd(-1)
                     
                         else:
+                            player.lives_upd(-1)
                             player.kill()
                             state = GameState.GAME_OVER
 
@@ -105,15 +106,10 @@ def main():
                 
 
         if state == GameState.GAME_OVER:
-            game_over.game_over_screen()
-            score_value_rect = score_value.rendered_str.get_rect()
-            score_label_rect = score_label.rendered_str.get_rect()
-            #print(f"PRINTED {game_over.text_rect_width} and {game_over.text_rect_height}")
-            screen.blit(score_value.rendered_str, (((SCREEN_WIDTH - score_value_rect.width) / 2, (SCREEN_HEIGHT / 4) + score_value_rect.height / 2)))
-            screen.blit(score_label.rendered_str, (((SCREEN_WIDTH - score_label_rect.width) / 2, (SCREEN_HEIGHT / 4) - score_label_rect.height)))
+            UI_.game_over_screen()
+            screen.blit(score_value.rendered_txt, (((SCREEN_WIDTH - score_value.width) / 2, (SCREEN_HEIGHT / 4) + score_value.height / 2)))
+            screen.blit(score_label.rendered_txt, (((SCREEN_WIDTH - score_label.width) / 2, (SCREEN_HEIGHT / 4) - score_label.height)))
 
-        #screen.blit(score_value.rendered_str, (80,10))
-        #screen.blit(score_label.rendered_str, (10,10))
         pygame.display.flip()
         
 
