@@ -106,8 +106,11 @@ def main():
 
         if state == GameState.GAME_OVER:
             game_over.game_over_screen()
-            screen.blit(score_value.rendered_str, (((SCREEN_WIDTH - 200)/ 2, (SCREEN_HEIGHT - 200) / 2)))
-            screen.blit(score_label.rendered_str, (((SCREEN_WIDTH - 200)/ 2, (SCREEN_HEIGHT - 200) / 2)))
+            score_value_rect = score_value.rendered_str.get_rect()
+            score_label_rect = score_label.rendered_str.get_rect()
+            #print(f"PRINTED {game_over.text_rect_width} and {game_over.text_rect_height}")
+            screen.blit(score_value.rendered_str, (((SCREEN_WIDTH - score_value_rect.width) / 2, (SCREEN_HEIGHT / 4) + score_value_rect.height / 2)))
+            screen.blit(score_label.rendered_str, (((SCREEN_WIDTH - score_label_rect.width) / 2, (SCREEN_HEIGHT / 4) - score_label_rect.height)))
 
         #screen.blit(score_value.rendered_str, (80,10))
         #screen.blit(score_label.rendered_str, (10,10))
