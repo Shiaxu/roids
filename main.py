@@ -61,6 +61,7 @@ def main():
                         
                     case pygame.K_SPACE:
                         if state == GameState.GAME_OVER:
+                            player.timer = 1
                             state = GameState.PLAYING
                             score_value.kill()
                             updatable.empty()
