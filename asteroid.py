@@ -21,6 +21,7 @@ class Asteroid(CircleShape):
         new1 = self.velocity.rotate(random_angle)
         new2 = self.velocity.rotate(-random_angle)
         new_radius = self.radius - ASTEROID_MIN_RADIUS
+        print(f"PRINTED {new_radius}")
         asteroid1 = Asteroid(self.position.x, self.position.y, new_radius )
         asteroid2 = Asteroid(self.position.x, self.position.y, new_radius )
         asteroid1.velocity = new1 * 1.2

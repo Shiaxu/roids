@@ -26,11 +26,12 @@ def main():
     enemies = pygame.sprite.Group()
     weapons = pygame.sprite.Group()
     renderable = pygame.sprite.Group()
+    loopable = pygame.sprite.Group()
 
     Asteroid.containers = (enemies, updatable, drawable)
-    Player.containers = (drawable)   
+    Player.containers = (drawable, loopable)   
     AsteroidField.containers = (updatable)
-    Bullets.containers = (weapons, updatable, drawable)
+    Bullets.containers = (weapons, updatable, drawable, loopable)
     Score.containers = (renderable)
     #Text.containers = (renderable)
                         
@@ -104,7 +105,8 @@ def main():
                     
 
         for obj in drawable:
-            obj.coordinate_reset(obj.position[0], obj.position[1])
+            if obj in loopable:
+                obj.coordinate_reset(obj.position[0], obj.position[1])
             obj.draw(screen)
             
         for obj in renderable:
