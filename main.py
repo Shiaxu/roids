@@ -8,11 +8,9 @@ from bullets import *
 from score import *
 from UI import *
 from game_state import *
+from game_init import *
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-
-
 
 def main():
     pygame.init
@@ -34,11 +32,13 @@ def main():
     Bullets.containers = (weapons, updatable, drawable, loopable)
     Score.containers = (renderable)
     #Text.containers = (renderable)
-                        
-    score_label = Text("Score:")
-    score_value = Score(0)
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-    asteroid_field = AsteroidField()
+
+    game_init = GameInit("Score:", 0, SCREEN_WIDTH, SCREEN_HEIGHT)                    
+    
+    score_label = Text(game_init.get_score_label())
+    score_value = Score(game_init.get_score_value())
+    player = Player(game_init.get_screen_width()/ 2, game_init.get_screen_heigth() / 2)
+    asteroid_field = game_init.get_asteroid_field()
     UI_ = UI(screen, SCREEN_WIDTH, SCREEN_HEIGHT)
     
     score_label.render_text()
@@ -63,13 +63,17 @@ def main():
                         if state == GameState.GAME_OVER:
                             player.timer = 1
                             state = GameState.PLAYING
-                            score_value.kill()
+                            
+                            loopable.empty()
+                            renderable.empty()
                             updatable.empty()
                             drawable.empty()
                             enemies.empty()
                             weapons.empty()
                             renderable.empty()
-        
+                            game_init2 = GameInit("Score:", 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+                            game_init = game_init2 
+
         pygame.Surface.fill(screen, ("#000000"))
         
         if state == GameState.GAME_OVER:
@@ -80,21 +84,15 @@ def main():
             updatable.update(dt)
             screen.blit(score_value.rendered_txt, (80,10))
             screen.blit(score_label.rendered_txt, (10,10))
+            
             try:
-                for enemy in enemies:
-                    if enemy.collision(player):
-                        enemy.kill()
-                        
-                        
-                        if player.lives > 1:
-                            player.lives_upd(-1)
-                    
-                        else:
-                            player.lives_upd(-1)
-                            player.kill()
-                            state = GameState.GAME_OVER
-
-
+                if player.collision_check(enemies):
+                    if player.check_hp(-1) < 1:
+                        state = GameState.GAME_OVER 
+                if state == GameState.PLAYING:
+                    if player.collision_check(weapons):
+                        if player.check_hp(-1) < 1:
+                            state = GameState.GAME_OVER 
             except Exception as e:
                 print(e)
         #### 
@@ -124,8 +122,10 @@ def main():
         
         if state == GameState.GAME_OVER:
             UI_.game_over_screen()
-            screen.blit(score_value.rendered_txt, (((SCREEN_WIDTH - score_value.width) / 2, (SCREEN_HEIGHT / 4) + score_value.height / 2)))
-            screen.blit(score_label.rendered_txt, (((SCREEN_WIDTH - score_label.width) / 2, (SCREEN_HEIGHT / 4) - score_label.height)))
+            score_v = score_value.get_rect()
+            score_l = score_label.get_rect()
+            screen.blit(score_value.rendered_txt, (((SCREEN_WIDTH - score_v.width) / 2, (SCREEN_HEIGHT / 4) + score_v.height / 2)))
+            screen.blit(score_label.rendered_txt, (((SCREEN_WIDTH - score_l.width) / 2, (SCREEN_HEIGHT / 4) - score_l.height)))
 
         pygame.display.flip()
         

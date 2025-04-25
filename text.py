@@ -29,4 +29,5 @@ class Text(pygame.sprite.Sprite):
 
     def get_rect(self):
         self.rendered_rect = self.rendered_txt.get_rect()
+        return self.rendered_txt.get_rect()
 

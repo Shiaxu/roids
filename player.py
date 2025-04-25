@@ -1,5 +1,6 @@
 from circleshape import *
 from bullets import *
+from game_state import *
 
 class Player(CircleShape):
     
@@ -56,3 +57,19 @@ class Player(CircleShape):
 
     def lives_upd(self, number):
         self.lives += number
+    
+    def check_hp(self, hp):
+        if self.lives > 1:
+            self.lives_upd(hp)
+            return self.lives
+        else:
+            self.lives_upd(hp)
+            self.kill()
+            return self.lives
+        
+    def collision_check(self, group):
+        for obj in group:
+            if obj.collision(self):
+                obj.kill()
+                return True
+        return False
